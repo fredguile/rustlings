@@ -2,7 +2,7 @@
 // Basically, this is the same as From. The main difference is that this should return a Result type
 // instead of the target type itself.
 // You can read more about it at https://doc.rust-lang.org/std/convert/trait.TryFrom.html
-use std::convert::{TryInto, TryFrom};
+use std::convert::{TryFrom, TryInto};
 
 #[derive(Debug)]
 struct Color {
@@ -10,8 +10,6 @@ struct Color {
     green: u8,
     blue: u8,
 }
-
-// I AM NOT DONE
 
 // Your task is to complete this implementation
 // and return an Ok result of inner type Color.
@@ -26,6 +24,23 @@ struct Color {
 impl TryFrom<(i16, i16, i16)> for Color {
     type Error = String;
     fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {
+        match tuple.0 {
+            x if x < 0 => Err(String::from("Red is negative")),
+            x if x > u8::MAX.into() => Err(String::from("Red is out of range")),
+            _ => match tuple.1 {
+                x if x < 0 => Err(String::from("Green is negative")),
+                x if x > u8::MAX.into() => Err(String::from("Green is out of range")),
+                _ => match tuple.2 {
+                    x if x < 0 => Err(String::from("Blue is negative")),
+                    x if x > u8::MAX.into() => Err(String::from("Blue is out of range")),
+                    _ => Ok(Color {
+                        red: tuple.0 as u8,
+                        green: tuple.1 as u8,
+                        blue: tuple.2 as u8,
+                    }),
+                },
+            },
+        }
     }
 }
 
@@ -33,6 +48,23 @@ impl TryFrom<(i16, i16, i16)> for Color {
 impl TryFrom<[i16; 3]> for Color {
     type Error = String;
     fn try_from(arr: [i16; 3]) -> Result<Self, Self::Error> {
+        match arr[0] {
+            x if x < 0 => Err(String::from("Red is negative")),
+            x if x > u8::MAX.into() => Err(String::from("Red is out of range")),
+            _ => match arr[1] {
+                x if x < 0 => Err(String::from("Green is negative")),
+                x if x > u8::MAX.into() => Err(String::from("Green is out of range")),
+                _ => match arr[2] {
+                    x if x < 0 => Err(String::from("Blue is negative")),
+                    x if x > u8::MAX.into() => Err(String::from("Blue is out of range")),
+                    _ => Ok(Color {
+                        red: arr[0] as u8,
+                        green: arr[1] as u8,
+                        blue: arr[2] as u8,
+                    }),
+                },
+            },
+        }
     }
 }
 
@@ -40,6 +72,27 @@ impl TryFrom<[i16; 3]> for Color {
 impl TryFrom<&[i16]> for Color {
     type Error = String;
     fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {
+        if slice.len() != 3 {
+            return Err(String::from("Wrong amount of input values (needs 3)"));
+        }
+
+        match slice[0] {
+            x if x < 0 => Err(String::from("Red is negative")),
+            x if x > u8::MAX.into() => Err(String::from("Red is out of range")),
+            _ => match slice[1] {
+                x if x < 0 => Err(String::from("Green is negative")),
+                x if x > u8::MAX.into() => Err(String::from("Green is out of range")),
+                _ => match slice[2] {
+                    x if x < 0 => Err(String::from("Blue is negative")),
+                    x if x > u8::MAX.into() => Err(String::from("Blue is out of range")),
+                    _ => Ok(Color {
+                        red: slice[0] as u8,
+                        green: slice[1] as u8,
+                        blue: slice[2] as u8,
+                    }),
+                },
+            },
+        }
     }
 }
 
